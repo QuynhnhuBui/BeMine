@@ -67,12 +67,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if (usernameEditText.getText().toString() == "" && passwordEditText.getText().toString() == "") {
                 Toast.makeText(this, "A username and a password are required", Toast.LENGTH_LONG).show();
             } else {
-                Log.d("LongLe", "password " + passwordEditText.getText().toString());
-                Log.d("LongLe", "check " + userViewModel.getPassword(usernameEditText.getText().toString()));
-               boolean alo = userViewModel.getPassword(usernameEditText.getText().toString()).equals(passwordEditText.getText().toString());
-               if (alo) {
-                   Toast.makeText(this, "OK ban", Toast.LENGTH_SHORT).show();
-               }
+                boolean alo = userViewModel.getPassword(usernameEditText.getText().toString()).equals(passwordEditText.getText().toString());
             }
         }
     }

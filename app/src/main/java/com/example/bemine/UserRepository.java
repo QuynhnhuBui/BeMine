@@ -19,7 +19,7 @@ public class UserRepository {
     }
 
     public String getPassword(String username) {
-        Log.d("LongLe",userDAO.getPassword(username));
+
         return userDAO.getPassword(username);
     }
 

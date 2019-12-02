@@ -14,7 +14,7 @@ public class UserViewModel extends AndroidViewModel {
     public void insert(User data){mRepository.insert(data);}
 
     public String getPassword (String username ) {
-        Log.d("LongLe", "repo " + mRepository.getPassword(username));
+
         return mRepository.getPassword(username);
     }
 }
