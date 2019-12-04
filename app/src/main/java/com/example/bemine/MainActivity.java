@@ -3,6 +3,7 @@ package com.example.bemine;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
@@ -70,6 +71,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 boolean alo = userViewModel.getPassword(usernameEditText.getText().toString()).equals(passwordEditText.getText().toString());
             }
         }
+        Intent intent = new Intent(this,mainscreen.class);
+        startActivity(intent);
     }
 
 }

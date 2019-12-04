@@ -13,6 +13,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -27,6 +29,7 @@ import android.widget.TextView;
 
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.io.FileOutputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -39,11 +42,13 @@ public class mainscreen extends AppCompatActivity implements View.OnClickListene
 
     SharedPreferences sharedPreferences;
     TextView dayTextView;
-    ImageView profile_pic;
     int SELECT_PICTURE1 = 100;
     int SELECT_PICTURE2 = 101;
     ImageView imageView;
     ImageView imageView1;
+    Date currentDate;
+    Date startDate;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,8 +59,8 @@ public class mainscreen extends AppCompatActivity implements View.OnClickListene
         imageView1 = findViewById(R.id.imageView5);
         dayTextView = findViewById(R.id.dayTextView);
         sharedPreferences = this.getSharedPreferences("com.example.bemine", Context.MODE_PRIVATE);
+
         String startDay = sharedPreferences.getString("startDay", "Error");
-        Log.d("Nhu", startDay);
         if (startDay.equals("Error")) {
 
             AlertDialog.Builder mBuilder = new AlertDialog.Builder(mainscreen.this);
@@ -75,11 +80,13 @@ public class mainscreen extends AppCompatActivity implements View.OnClickListene
         }
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
         String endDate = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(new Date());
-        Log.d("Nhu", endDate);
+
         try {
-            Date currentDate = simpleDateFormat.parse(endDate);
-            Date startDate = simpleDateFormat.parse(startDay);
-            dayDifference(startDate, currentDate);
+
+            Log.d("Nhu", endDate);
+            currentDate = simpleDateFormat.parse(endDate);
+            startDate = simpleDateFormat.parse(startDay);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -87,20 +94,28 @@ public class mainscreen extends AppCompatActivity implements View.OnClickListene
         imageView.setOnClickListener(this);
         imageView1.setOnClickListener(this);
 
+        TextView tx = findViewById(R.id.textView);
+        Typeface custom_font = Typeface.createFromAsset(getAssets(), "font/clickerscript-regular.ttf");
+        tx.setTypeface(custom_font);
+        Typeface custom= Typeface.createFromAsset(getAssets(), "font/crimsonpro-extraLight.ttf");
+        dayTextView.setTypeface(custom);
+        dayDifference(startDate,currentDate);
+
 
     }
 
 
     public void dayDifference(Date startDay, Date endDay) {
-        long difference = Math.abs(startDay.getTime() - endDay.getTime());
-        long differenceDates = difference / (24 * 60 * 60 * 1000);
-        dayTextView.setText(String.valueOf(differenceDates) + " days");
+        long different = endDay.getTime() - startDay.getTime();
+        long differenceDates = different / (24 * 60 * 60 * 1000);
+        dayTextView.setText(String.format("%d",differenceDates) + "\n days" );
+        Log.d("Nhu",String.valueOf(differenceDates));
 
     }
 
 
     @Override
-    public void onClick(View v) {
+    public void onClick(View v) {   
         if (v.getId() == R.id.imageView2) {
             Intent intent = new Intent();
             intent.setType("image/*");
@@ -112,6 +127,7 @@ public class mainscreen extends AppCompatActivity implements View.OnClickListene
             intent.setType("image/*");
             intent.setAction(Intent.ACTION_GET_CONTENT);
             startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_PICTURE2);
+
         }
     }
 
@@ -124,6 +140,7 @@ public class mainscreen extends AppCompatActivity implements View.OnClickListene
                 if (null != selectedImageUri) {
                     String path = selectedImageUri.getPath();
                     Log.e("image path", path + "");
+
                     imageView.setImageURI(selectedImageUri);
                 }
             }

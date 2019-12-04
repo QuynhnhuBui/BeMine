@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="150dp"
         android:fontFamily=""
-        android:text="be mine"
+        android:text="@string/title"
         android:textAlignment="center"
         android:textColor="#FFFFFF"
         android:textSize="115sp"
