@@ -59,7 +59,7 @@ public class mainscreen extends AppCompatActivity implements View.OnClickListene
         imageView1 = findViewById(R.id.imageView5);
         dayTextView = findViewById(R.id.dayTextView);
         sharedPreferences = this.getSharedPreferences("com.example.bemine", Context.MODE_PRIVATE);
-
+        sharedPreferences.edit().clear().apply();
         String startDay = sharedPreferences.getString("startDay", "Error");
         if (startDay.equals("Error")) {
 
@@ -115,7 +115,7 @@ public class mainscreen extends AppCompatActivity implements View.OnClickListene
 
 
     @Override
-    public void onClick(View v) {   
+    public void onClick(View v) {
         if (v.getId() == R.id.imageView2) {
             Intent intent = new Intent();
             intent.setType("image/*");
