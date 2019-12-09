@@ -48,7 +48,7 @@ public class mainscreen extends AppCompatActivity implements View.OnClickListene
     ImageView imageView1;
     Date currentDate;
     Date startDate;
-
+    AlertDialog alertDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,8 +59,9 @@ public class mainscreen extends AppCompatActivity implements View.OnClickListene
         imageView1 = findViewById(R.id.imageView5);
         dayTextView = findViewById(R.id.dayTextView);
         sharedPreferences = this.getSharedPreferences("com.example.bemine", Context.MODE_PRIVATE);
-        sharedPreferences.edit().clear().apply();
+
         String startDay = sharedPreferences.getString("startDay", "Error");
+        Log.d("Nhu",startDay);
         if (startDay.equals("Error")) {
 
             AlertDialog.Builder mBuilder = new AlertDialog.Builder(mainscreen.this);
@@ -72,24 +73,42 @@ public class mainscreen extends AppCompatActivity implements View.OnClickListene
                 public void onClick(DialogInterface dialog, int which) {
                     String startDay = mDay.getText().toString();
                     sharedPreferences.edit().putString("startDay", startDay).apply();
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                    String endDate = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(new Date());
+
+                    try {
+
+                        Log.d("Nhu", endDate);
+                        currentDate = simpleDateFormat.parse(endDate);
+                        startDate = simpleDateFormat.parse(startDay);
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    dayDifference(startDate,currentDate);
+
                 }
             });
-            AlertDialog alertDialog = mBuilder.create();
+            alertDialog = mBuilder.create();
             alertDialog.show();
 
+
+        }else {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            String endDate = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(new Date());
+
+            try {
+
+                Log.d("Nhu", endDate);
+                currentDate = simpleDateFormat.parse(endDate);
+                startDate = simpleDateFormat.parse(startDay);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            dayDifference(startDate,currentDate);
         }
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        String endDate = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(new Date());
 
-        try {
-
-            Log.d("Nhu", endDate);
-            currentDate = simpleDateFormat.parse(endDate);
-            startDate = simpleDateFormat.parse(startDay);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
         imageView.setOnClickListener(this);
         imageView1.setOnClickListener(this);
@@ -99,17 +118,25 @@ public class mainscreen extends AppCompatActivity implements View.OnClickListene
         tx.setTypeface(custom_font);
         Typeface custom= Typeface.createFromAsset(getAssets(), "font/crimsonpro-extraLight.ttf");
         dayTextView.setTypeface(custom);
-        dayDifference(startDate,currentDate);
+
+
+
+
 
 
     }
 
 
     public void dayDifference(Date startDay, Date endDay) {
-        long different = endDay.getTime() - startDay.getTime();
-        long differenceDates = different / (24 * 60 * 60 * 1000);
-        dayTextView.setText(String.format("%d",differenceDates) + "\n days" );
-        Log.d("Nhu",String.valueOf(differenceDates));
+        try {
+            long diff = endDay.getTime() - startDay.getTime();
+            long difference = diff / (1000 * 60 * 60 * 24);
+            String dayDifference = String.valueOf(difference);
+            dayTextView.setText(dayDifference + "\n days");
+            Log.d("Nhu", dayDifference);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
     }
 
@@ -154,6 +181,15 @@ public class mainscreen extends AppCompatActivity implements View.OnClickListene
             }
         }
 
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        SharedPreferences prefs = getSharedPreferences("X", MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString("lastActivity", getClass().getName());
+        editor.commit();
     }
 }
 
